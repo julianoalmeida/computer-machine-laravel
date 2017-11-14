@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION_COMP_MACHINE', 'mysql'),
 
     /*
     |--------------------------------------------------------------------------
@@ -76,6 +76,18 @@ return [
             'password' => env('DB_PASSWORD', ''),
             'charset' => 'utf8',
             'prefix' => '',
+        ],
+
+        'computer_machine' => [
+            'driver'    => 'mysql',
+            'host'      => env('DB_HOST_COMP_MACHINE', 'localhost'),
+            'database'  => env('DB_DATABASE_COMP_MACHINE', 'forge'),
+            'username'  => env('DB_USERNAME_COMP_MACHINE', 'forge'),
+            'password'  => env('DB_PASSWORD_COMP_MACHINE', ''),
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
         ],
 
     ],

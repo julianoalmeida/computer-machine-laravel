@@ -5,15 +5,15 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Category
+ * Class Categories
  * @package App
  */
-class Category extends Model
+class Categories extends Model
 {
     /**
      * @var string
      */
-    public $table = 'product';
+    public $table = 'categories';
 
     /**
      * @var array

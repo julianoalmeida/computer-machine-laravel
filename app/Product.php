@@ -19,7 +19,7 @@ class Product extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'code', 'price'
+        'name', 'code', 'price', 'category_id'
     ];
 
     /**
@@ -27,6 +27,6 @@ class Product extends Model
      **/
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Categories::class);
     }
 }

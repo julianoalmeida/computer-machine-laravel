@@ -23,6 +23,6 @@ class ProductRepository extends Repository
      */
     function model()
     {
-        return 'App\Models\Product';
+        return 'App\Product';
     }
 }

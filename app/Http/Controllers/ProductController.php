@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Repositories\ProductRepository as Product;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class ProductController
@@ -24,6 +25,7 @@ class ProductController extends Controller
     public function __construct(Product $product)
     {
         $this->product = $product;
+        $this->middleware('auth');
     }
 
 
@@ -38,7 +40,7 @@ class ProductController extends Controller
             return view('products.index')->with(['products' => $this->product->paginate()]);
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
-            Flash::error('Something was wrong, please contact the administrator');
+            return back()->with('error', 'Something was wrong, please contact the administrator!');
         }
     }
 
@@ -64,11 +66,10 @@ class ProductController extends Controller
             DB::transaction(function () use ($request) {
                 $this->product->create($request->all());
             });
-            Flash::success('Product created with success!');
-            return redirect(route('products.index'));
+            return redirect()->route('products.index')->with('info', 'Product created with success!');
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
-            Flash::error('Something was wrong, please contact the administrator');
+            return back()->with('error', 'Something was wrong, please contact the administrator!');
         }
     }
 
@@ -83,13 +84,12 @@ class ProductController extends Controller
         try {
             $product = $this->product->findOrFail($id);
             if (empty($product)) {
-                Flash::error('Product not found');
-                return redirect(route('products.index'));
+                return redirect()->route('products.index')->with('error', 'Product not found');
             }
             return view('products.show')->with(['product' => $product]);
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
-            Flash::error('Something was wrong, please contact the administrator');
+            return back()->with('error', 'Something was wrong, please contact the administrator!');
         }
     }
 
@@ -104,13 +104,12 @@ class ProductController extends Controller
         try {
             $product = $this->product->findOrFail($id);
             if (empty($product)) {
-                Flash::error('Product not found');
-                return redirect(route('products.index'));
+                return redirect()->route('products.index')->with('error', 'Product not found');
             }
             return view('products.edit')->with(['product' => $product]);
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
-            Flash::error('Something was wrong, please contact the administrator');
+            return back()->with('error', 'Something was wrong, please contact the administrator');
         }
     }
 
@@ -126,17 +125,18 @@ class ProductController extends Controller
         try {
             $product = $this->product->findOrFail($id);
             if (empty($product)) {
-                Flash::error('Product not found');
-                return redirect(route('alternatives.index'));
+                return redirect()->route('products.index')->with('error', 'Product not found');
             }
             DB::transaction(function () use ($request, $id) {
-                $this->product->update($request->all(), $id);
+                $this->product->update(
+                    $request->only('name', 'code', 'price', 'category_id'),
+                    $id
+                );
             });
-            Flash::success('Product updated with success!');
-            return redirect(route('products.index'));
+            return redirect()->route('products.index')->with('info', 'Product updated with success!');
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
-            Flash::error('Something was wrong, please contact the administrator');
+            return back()->with('error', 'Something was wrong, please contact the administrator!');
         }
     }
 
@@ -151,8 +151,7 @@ class ProductController extends Controller
         try {
             $product = $this->product->findOrFail($id);
             if (empty($product)) {
-                Flash::error('Product not found');
-                return redirect(route('products.index'));
+                return redirect()->route('products.index')->with('error', 'Product not found');
             }
             DB::transaction(function () use ($id) {
                 $this->product->delete($id);
@@ -160,7 +159,7 @@ class ProductController extends Controller
             return back()->with('info', 'Product destroyed with success!');
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
-            Flash::error('Something was wrong, please contact the administrator');
+            return back()->with('error', 'Something was wrong, please contact the administrator!');
         }
     }
 }

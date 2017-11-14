@@ -1,2 +1,2 @@
 # computer-machine-laravel
-A crud developed using laravel 5.4 with the best practices
+Application developed using laravel 5.4 showing the best practices and patterns

@@ -17,7 +17,7 @@ class StoreProductRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -28,7 +28,10 @@ class StoreProductRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name'  => 'required|string|max:60|unique:computer_machine.products,name',
+            'code'  => 'required|string|max:60|unique:computer_machine.products,code',
+            'price' => 'required|numeric|regex:/^[0-9]{0,8}.[0-9]{0,2}$/',
+            'category_id' => "required|integer|exists:computer_machine.categories,id"
         ];
     }
 }
